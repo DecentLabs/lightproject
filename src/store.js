@@ -5,15 +5,24 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-    wakeLockStatus: ''
+    wakeLockStatus: '',
+    bgColor: '',
+    bgHue: 46
   },
-  getters: {},
+  getters: {
+  },
   mutations: {
     setWakeLockStatus(state, status) {
       state.wakeLockStatus = status
+    },
+    setHue(state, hue) {
+      state.bgHue = hue
+    },
+    setStartingColor(state, color) {
+      state.bgColor = color
     }
   },
-  actions: {}
+
 })
 
 export default store

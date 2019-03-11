@@ -3,7 +3,7 @@
 async function initWakeLock () {
   let status = ''
   if ('getWakeLock' in navigator) {
-    let wakeLockObj
+    let wakeLockObj = undefined
 
     try {
       // Create a wake lock for the type we want.
@@ -14,12 +14,19 @@ async function initWakeLock () {
       console.error('getWakeLock error', err)
       status = 'wakelock error'
     }
+
+    return {
+      status,
+      wakeLock: wakeLockObj
+    }
   } else {
     console.log('getWakeLock not supported')
     status = 'wakelock not supported'
   }
 
-  return status
+  return {
+    status
+  }
 }
 
 export {

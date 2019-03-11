@@ -2,7 +2,8 @@
   <div id="app" :style="{backgroundColor: bgColor}"
     @touchstart="onStart" @touchmove="onMove"
   >
-    <p>{{ wlStatus }}</p>
+    <p>{{ wakeLockStatus }}</p>
+    <settings></settings>
   </div>
 </template>
 
@@ -10,24 +11,26 @@
 /* eslint-disable no-console */
 
 import { initWakeLock }from './utils/wakelock'
+import { mapState } from 'vuex'
+
+import settings from './components/settings'
 
 export default {
   name: 'app',
+  components: {settings},
   data() {
     return {
       startX: 0,
       startY: 0,
       lightness: 70,
-      hue: 70
+      hue: 46
     }
   },
   computed: {
-    bgColor() {
-      return `hsl(${this.hue}, 100%, ${this.lightness}%)`
-    },
-    wlStatus() {
-      return this.$store.state.wakeLockStatus
-    }
+    ...mapState([
+      'bgColor',
+      'wakeLockStatus'
+    ])
   },
   methods: {
     onStart(e) {
@@ -64,9 +67,9 @@ export default {
   },
   mounted() {
     initWakeLock().then(res => {
-      const status = res
-      this.$store.commit('setWakeLockStatus', status)
+      this.$store.commit('setWakeLockStatus', res.status)
     })
+    this.$store.commit('setStartingColor', `hsl(${this.hue}, 100%, ${this.lightness}%)`)
   }
 }
 </script>
