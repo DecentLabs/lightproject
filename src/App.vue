@@ -70,9 +70,13 @@ export default {
       this.startX = posX
 
       this.$store.commit('setBgColor', `hsl(${this.hue}, 100%, ${this.lightness}%)`)
+    },
+    loadLocalSettings() {
+      this.$store.commit('')
     }
   },
   mounted() {
+
     initWakeLock().then(res => {
       this.$store.commit('setWakeLockStatus', res.status)
     })
