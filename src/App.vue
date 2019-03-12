@@ -34,14 +34,22 @@ export default {
   },
   methods: {
     onStart(e) {
+
       this.startX = e.touches[0].clientX
       this.startY = e.touches[0].clientY
+
     },
     onMove(e) {
+      console.log('bef move', this.startY)
+
+      console.log(e.changedTouches)
+
       let posY = e.changedTouches[0].clientY
       let posX = e.changedTouches[0].clientX
       let deltaY = Math.abs(posY - this.startY)
       let deltaX = Math.abs(posX - this.startX)
+
+      console.log(deltaY)
 
       if (deltaY > 0 && deltaX < 10) {
         if  (posY < this.startY) {
@@ -63,13 +71,16 @@ export default {
 
       this.startY = posY
       this.startX = posX
+
+      this.$store.commit('setBgColor', `hsl(${this.hue}, 100%, ${this.lightness}%)`)
+
     }
   },
   mounted() {
     initWakeLock().then(res => {
       this.$store.commit('setWakeLockStatus', res.status)
     })
-    this.$store.commit('setStartingColor', `hsl(${this.hue}, 100%, ${this.lightness}%)`)
+    this.$store.commit('setBgColor', `hsl(${this.hue}, 100%, ${this.lightness}%)`)
   }
 }
 </script>

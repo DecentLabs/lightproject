@@ -18,7 +18,7 @@ const store = new Vuex.Store({
     setHue(state, hue) {
       state.bgHue = hue
     },
-    setStartingColor(state, color) {
+    setBgColor(state, color) {
       state.bgColor = color
     }
   },
