@@ -1,6 +1,7 @@
 <template>
-  <div id="app" :style="{backgroundColor: bgColor}"
-    @touchstart="onStart" @touchmove="onMove"
+  <div id="app"
+       :class="theme" :style="{backgroundColor: bgColor}"
+       @touchstart="onStart" @touchmove="onMove"
   >
     <p>{{ wakeLockStatus }}</p>
     <settings></settings>
@@ -29,27 +30,23 @@ export default {
   computed: {
     ...mapState([
       'bgColor',
+      'bgLightness',
       'wakeLockStatus'
-    ])
+    ]),
+    theme() {
+      return parseInt(this.bgLightness, 10) < 40 ? 'dark' : 'light'
+    }
   },
   methods: {
     onStart(e) {
-
       this.startX = e.touches[0].clientX
       this.startY = e.touches[0].clientY
-
     },
     onMove(e) {
-      console.log('bef move', this.startY)
-
-      console.log(e.changedTouches)
-
       let posY = e.changedTouches[0].clientY
       let posX = e.changedTouches[0].clientX
       let deltaY = Math.abs(posY - this.startY)
       let deltaX = Math.abs(posX - this.startX)
-
-      console.log(deltaY)
 
       if (deltaY > 0 && deltaX < 10) {
         if  (posY < this.startY) {
@@ -73,7 +70,6 @@ export default {
       this.startX = posX
 
       this.$store.commit('setBgColor', `hsl(${this.hue}, 100%, ${this.lightness}%)`)
-
     }
   },
   mounted() {
@@ -101,5 +97,14 @@ body {
   right: 0;
   text-align: center;
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
+}
+
+
+.dark {
+  color: #fefefe;
+}
+
+.light {
+  color: #020204
 }
 </style>

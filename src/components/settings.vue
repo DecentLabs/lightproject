@@ -1,7 +1,13 @@
 <template>
   <form>
-    <label>starting color</label>
-    <input type="range" id="hue" name="hue" min="0" max="360" :value="bgHue">
+    <div>
+      <label :class="theme">starting color</label>
+      <input type="range" id="hue" name="hue" min="0" max="360" v-model="bgHue">
+    </div>
+    <div>
+      <label :class="theme">starting lightness</label>
+      <input type="range" id="lightness" name="lightness" min="0" max="100" v-model="bgLightness">
+    </div>
   </form>
 </template>
 
@@ -16,13 +22,19 @@ export default {
         return this.$store.state.bgHue
       },
       set: function(value) {
-        console.log(value)
-        this.$store.commit('setStartingColor', `hsl(${value}, 100%, ${this.lightness}%)`)
+        this.$store.commit('setHue', value)
+        this.$store.commit('setBgColor', `hsl(${value}, 100%, ${this.bgLightness}%)`)
+      }
+    },
+    bgLightness: {
+      get: function() {
+        return this.$store.state.bgLightness
+      },
+      set: function(value) {
+        this.$store.commit('setLightness', value)
+        this.$store.commit('setBgColor', `hsl(${this.bgHue}, 100%, ${value}%)`)
       }
     }
-  },
-  mounted() {
-    this.$store.commit('setStartingColor', `hsl(${this.hue}, 100%, ${this.lightness}%)`)
   }
 }
 </script>

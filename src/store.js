@@ -7,7 +7,8 @@ const store = new Vuex.Store({
   state: {
     wakeLockStatus: '',
     bgColor: '',
-    bgHue: 46
+    bgHue: 46,
+    bgLightness: 70
   },
   getters: {
   },
@@ -17,6 +18,9 @@ const store = new Vuex.Store({
     },
     setHue(state, hue) {
       state.bgHue = hue
+    },
+    setLightness(state, lightness) {
+      state.bgLightness = lightness
     },
     setBgColor(state, color) {
       state.bgColor = color
