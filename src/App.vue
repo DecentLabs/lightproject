@@ -24,13 +24,15 @@ export default {
       startX: 0,
       startY: 0,
       lightness: 70,
-      hue: 46
+      hue: 46,
+      wakeLock: 30
     }
   },
   computed: {
     ...mapState([
       'bgColor',
       'bgLightness',
+      'wakeLockTime',
       'wakeLockStatus'
     ]),
     theme() {
@@ -71,8 +73,14 @@ export default {
 
       this.$store.commit('setBgColor', `hsl(${this.hue}, 100%, ${this.lightness}%)`)
     },
-    loadLocalSettings() {
+    setLocalSettings() {
+
       this.$store.commit('')
+    },
+    loadLocalSettings() {
+      this.hue = localStorage.getItem('light-hue')
+      this.lightness = localStorage.getItem('light-lightness')
+      this.wakeLockTime = localStorage.getItem('light-time')
     }
   },
   mounted() {
