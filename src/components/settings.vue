@@ -33,7 +33,6 @@ export default {
       },
       set: function(value) {
         this.$store.dispatch('saveHue', value)
-        this.$store.commit('setBgColor', `hsl(${value}, 100%, ${this.bgLightness}%)`)
       }
     },
     bgLightness: {
@@ -42,7 +41,6 @@ export default {
       },
       set: function(value) {
         this.$store.dispatch('saveLightness', value)
-        this.$store.commit('setBgColor', `hsl(${this.bgHue}, 100%, ${value}%)`)
       }
     },
     wakeLockTime: {

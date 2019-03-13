@@ -23,20 +23,19 @@ export default {
     return {
       startX: 0,
       startY: 0,
-      lightness: 70,
-      hue: 46,
       wakeLock: 30
     }
   },
   computed: {
     ...mapState([
-      'bgColor',
-      'bgLightness',
       'wakeLockTime',
       'wakeLockStatus'
     ]),
+    bgColor() {
+      return this.$store.getters.bgColor;
+    },
     theme() {
-      return parseInt(this.bgLightness, 10) < 40 ? 'dark' : 'light'
+      return parseInt(this.$store.state.bgLightness, 10) < 40 ? 'dark' : 'light'
     }
   },
   methods: {
@@ -45,6 +44,9 @@ export default {
       this.startY = e.touches[0].clientY
     },
     onMove(e) {
+      let hue = this.$store.state.bgHue
+      let lightness = this.$store.state.bgLightness
+
       let posY = e.changedTouches[0].clientY
       let posX = e.changedTouches[0].clientX
       let deltaY = Math.abs(posY - this.startY)
@@ -53,42 +55,32 @@ export default {
       if (deltaY > 0 && deltaX < 10) {
         if  (posY < this.startY) {
           console.log('up')
-          this.lightness += deltaY * 0.2
+          lightness += deltaY * 0.2
         } else {
           console.log('down')
-          this.lightness -= deltaY * 0.2
+          lightness -= deltaY * 0.2
         }
       }
 
       if (deltaX > 0 && deltaY < 10) {
         if (posX > this.startX) {
-          this.hue += deltaX * 0.2
+          hue += deltaX * 0.2
         } else {
-          this.hue -= deltaX * 0.2
+          hue -= deltaX * 0.2
         }
       }
 
       this.startY = posY
       this.startX = posX
-
-      this.$store.commit('setBgColor', `hsl(${this.hue}, 100%, ${this.lightness}%)`)
-    },
-    setLocalSettings() {
-
-      this.$store.commit('')
-    },
-    loadLocalSettings() {
-      this.hue = localStorage.getItem('light-hue')
-      this.lightness = localStorage.getItem('light-lightness')
-      this.wakeLockTime = localStorage.getItem('light-time')
+      this.$store.commit('setHue',hue)
+      this.$store.commit('setLightness', lightness)
     }
   },
   mounted() {
-
     initWakeLock().then(res => {
       this.$store.commit('setWakeLockStatus', res.status)
     })
-    this.$store.commit('setBgColor', `hsl(${this.hue}, 100%, ${this.lightness}%)`)
+    this.$store.dispatch('loadSettings')
   }
 }
 </script>

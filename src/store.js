@@ -1,17 +1,26 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
+const STORAGE = {
+  TIME:'light-time',
+  HUE: 'light-hue',
+  LIGHTNESS: 'light-lightness'
+}
+
+
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
     wakeLockStatus: '',
     wakeLockTime: 30,
-    bgColor: '',
     bgHue: 46,
     bgLightness: 70
   },
   getters: {
+    bgColor(state) {
+      return `hsl(${state.hue}, 100%, ${state.lightness}%)`
+    }
   },
   mutations: {
     setWakeLockStatus(state, status) {
@@ -25,29 +34,37 @@ const store = new Vuex.Store({
     },
     setLightness(state, lightness) {
       state.bgLightness = lightness
-    },
-    setBgColor(state, color) {
-      state.bgColor = color
-    },
-    loadSettings(state, {hue, lightness, time}) {
-      state.bgHue = hue
-      state.bgLightness = lightness
-      state.wakeLockTime = time
     }
   },
   actions: {
     saveHue({commit}, value) {
       commit('setHue', value)
-      localStorage.setItem('light-hue', value)
+      localStorage.setItem(STORAGE.HUE, value)
     },
     saveLightness({commit}, value) {
       commit('setLightness', value)
-      localStorage.setItem('light-lightness', value)
+      localStorage.setItem(STORAGE.LIGHTNESS, value)
     },
     saveWakeLockTime({commit}, value) {
       commit('setWakeLockTime', value)
-      localStorage.setItem('light-time', value)
+      localStorage.setItem(STORAGE.TIME, value)
     },
+    loadSettings({commit}) {
+      const hue = localStorage.getItem(STORAGE.HUE)
+      const lightness = localStorage.getItem(STORAGE.LIGHTNESS)
+      const time = localStorage.getItem(STORAGE.TIME)
+      if(hue) {
+        commit('setHue', hue)
+      }
+
+      if(lightness) {
+        commit('setLightness', lightness)
+      }
+
+      if(time) {
+        commit('setWakeLockTime', time)
+      }
+    }
   }
 })
 
