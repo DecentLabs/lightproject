@@ -35,7 +35,7 @@ export default {
       return this.$store.getters.bgColor;
     },
     theme() {
-      return parseInt(this.$store.state.bgLightness, 10) < 40 ? 'dark' : 'light'
+      return parseInt(this.$store.state.lightness, 10) < 40 ? 'dark' : 'light'
     }
   },
   methods: {
@@ -44,8 +44,8 @@ export default {
       this.startY = e.touches[0].clientY
     },
     onMove(e) {
-      let hue = this.$store.state.bgHue
-      let lightness = this.$store.state.bgLightness
+      let hue = this.$store.state.hue
+      let lightness = this.$store.state.lightness
 
       let posY = e.changedTouches[0].clientY
       let posX = e.changedTouches[0].clientX

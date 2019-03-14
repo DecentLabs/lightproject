@@ -29,7 +29,7 @@ export default {
   computed: {
     bgHue: {
       get: function() {
-        return this.$store.state.bgHue
+        return this.$store.state.hue
       },
       set: function(value) {
         this.$store.dispatch('saveHue', value)
@@ -37,7 +37,7 @@ export default {
     },
     bgLightness: {
       get: function() {
-        return this.$store.state.bgLightness
+        return this.$store.state.lightness
       },
       set: function(value) {
         this.$store.dispatch('saveLightness', value)
