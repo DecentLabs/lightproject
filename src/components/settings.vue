@@ -1,5 +1,5 @@
 <template>
-  <div class="form-wrapper">
+  <div class="form-wrapper" ref="settings">
     <form>
       <div>
         <label :class="theme" for="hue">starting color</label>
@@ -18,47 +18,73 @@
         </select>
       </div>
     </form>
+    <button v-if="isSettingVisible" @click="showSettings(false)">hide settings</button>
+    <button v-if="!isSettingVisible" @click="showSettings(true)">show settings</button>
   </div>
 </template>
 
 <script>
-/* eslint-disable no-console */
+  /* eslint-disable no-console */
 
-export default {
-  name: 'app',
-  computed: {
-    bgHue: {
-      get: function() {
-        return this.$store.state.hue
-      },
-      set: function(value) {
-        this.$store.dispatch('saveHue', value)
+  export default {
+    name: 'app',
+    data () {
+      return {
+        isSettingVisible: true
       }
     },
-    bgLightness: {
-      get: function() {
-        return this.$store.state.lightness
+    computed: {
+      bgHue: {
+        get: function () {
+          return this.$store.state.hue
+        },
+        set: function (value) {
+          this.$store.dispatch('saveHue', value)
+        }
       },
-      set: function(value) {
-        this.$store.dispatch('saveLightness', value)
-      }
-    },
-    wakeLockTime: {
-      get: function() {
-        return this.$store.state.wakeLockTime
+      bgLightness: {
+        get: function () {
+          return this.$store.state.lightness
+        },
+        set: function (value) {
+          this.$store.dispatch('saveLightness', value)
+        }
       },
-      set: function(value) {
-        this.$store.dispatch('saveWakeLockTime', value)
-      }
+      wakeLockTime: {
+        get: function () {
+          return this.$store.state.wakeLockTime
+        },
+        set: function (value) {
+          this.$store.dispatch('saveWakeLockTime', value)
+        }
+      },
     },
+    methods: {
+      showSettings (toShow) {
+        const settings = this.$refs.settings
+
+        if (toShow) {
+          settings.style.transform = 'translateY(0)'
+        } else {
+          const form = settings.querySelector('form')
+          settings.style.transform = `translateY(${form.clientHeight * -1 + 20}px)`
+        }
+
+        this.isSettingVisible = toShow
+      }
+    }
   }
-}
 </script>
 
 <style scoped>
   .form-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    transition: transform .6s;
   }
 
   form {
@@ -77,5 +103,9 @@ export default {
     height: 10px;
     font-size: 15px;
     z-index: 3;
+  }
+
+  button {
+    height: 20px;
   }
 </style>

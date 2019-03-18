@@ -1,114 +1,114 @@
 <template>
-  <div id="app"
+  <div id="app" ref="main"
        :class="theme" :style="{backgroundColor: bgColor}"
        @touchstart="onStart" @touchmove="onMove"
   >
     <p>{{ wakeLockStatus }}</p>
     <settings></settings>
+
   </div>
 </template>
 
 <script>
-/* eslint-disable no-console */
+  /* eslint-disable no-console */
 
-import { initWakeLock }from './utils/wakelock'
-import { mapState } from 'vuex'
+  import { initWakeLock } from './utils/wakelock'
+  import { mapState } from 'vuex'
 
-import settings from './components/settings'
+  import settings from './components/settings'
 
-export default {
-  name: 'app',
-  components: {settings},
-  data() {
-    return {
-      startX: 0,
-      startY: 0,
-      wakeLock: 30
-    }
-  },
-  computed: {
-    ...mapState([
-      'wakeLockTime',
-      'wakeLockStatus'
-    ]),
-    bgColor() {
-      return this.$store.getters.bgColor;
-    },
-    theme() {
-      return parseInt(this.$store.state.lightness, 10) < 40 ? 'dark' : 'light'
-    }
-  },
-  methods: {
-    onStart(e) {
-      this.startX = e.touches[0].clientX
-      this.startY = e.touches[0].clientY
-    },
-    onMove(e) {
-      let hue = this.$store.state.hue
-      let lightness = this.$store.state.lightness
-
-      let posY = e.changedTouches[0].clientY
-      let posX = e.changedTouches[0].clientX
-      let deltaY = Math.abs(posY - this.startY)
-      let deltaX = Math.abs(posX - this.startX)
-
-      if (deltaY > 0 && deltaX < 10) {
-        if  (posY < this.startY) {
-          console.log('up')
-          lightness += deltaY * 0.2
-        } else {
-          console.log('down')
-          lightness -= deltaY * 0.2
-        }
+  export default {
+    name: 'app',
+    components: {settings},
+    data () {
+      return {
+        startX: 0,
+        startY: 0,
+        wakeLock: 30
       }
-
-      if (deltaX > 0 && deltaY < 10) {
-        if (posX > this.startX) {
-          hue += deltaX * 0.2
-        } else {
-          hue -= deltaX * 0.2
-        }
+    },
+    computed: {
+      ...mapState([
+        'wakeLockTime',
+        'wakeLockStatus'
+      ]),
+      bgColor () {
+        return this.$store.getters.bgColor
+      },
+      theme () {
+        return parseInt(this.$store.state.lightness, 10) < 40 ? 'dark' : 'light'
       }
+    },
+    methods: {
+      onStart (e) {
+        this.startX = e.touches[0].clientX
+        this.startY = e.touches[0].clientY
+      },
+      onMove (e) {
+        let hue = this.$store.state.hue
+        let lightness = this.$store.state.lightness
 
-      this.startY = posY
-      this.startX = posX
-      this.$store.commit('setHue',hue)
-      this.$store.commit('setLightness', lightness)
+        let posY = e.changedTouches[0].clientY
+        let posX = e.changedTouches[0].clientX
+        let deltaY = Math.abs(posY - this.startY)
+        let deltaX = Math.abs(posX - this.startX)
+
+        if (deltaY > 0 && deltaX < 10) {
+          if (posY < this.startY) {
+            console.log('up')
+            lightness += deltaY * 0.2
+          } else {
+            console.log('down')
+            lightness -= deltaY * 0.2
+          }
+        }
+
+        if (deltaX > 0 && deltaY < 10) {
+          if (posX > this.startX) {
+            hue += deltaX * 0.2
+          } else {
+            hue -= deltaX * 0.2
+          }
+        }
+
+        this.startY = posY
+        this.startX = posX
+        this.$store.commit('setHue', hue)
+        this.$store.commit('setLightness', lightness)
+      }
+    },
+    mounted () {
+      initWakeLock().then(res => {
+        this.$store.commit('setWakeLockStatus', res.status)
+      })
+      this.$store.dispatch('loadSettings')
     }
-  },
-  mounted() {
-    initWakeLock().then(res => {
-      this.$store.commit('setWakeLockStatus', res.status)
-    })
-    this.$store.dispatch('loadSettings')
   }
-}
 </script>
 
 <style>
 
-body {
-  width: 100%;
-  height: 100vh;
-  overflow: hidden;
-}
+  body {
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+  }
 
-#app {
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  text-align: center;
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-}
+  #app {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    text-align: center;
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  }
 
+  .dark {
+    color: #fefefe;
+  }
 
-.dark {
-  color: #fefefe;
-}
-
-.light {
-  color: #020204
-}
+  .light {
+    color: #020204
+  }
 </style>
