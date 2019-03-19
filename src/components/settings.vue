@@ -2,14 +2,6 @@
   <div class="form-wrapper" ref="settings">
     <form>
       <div>
-        <label :class="theme" for="hue">starting color</label>
-        <input type="range" id="hue" name="hue" min="0" max="360" v-model="bgHue">
-      </div>
-      <div>
-        <label :class="theme" for="lightness">starting lightness</label>
-        <input type="range" id="lightness" name="lightness" min="0" max="100" v-model="bgLightness">
-      </div>
-      <div>
         <label for="wakelock">wakelock time limit</label>
         <select id="wakelock" v-model="wakeLockTime">
           <option value="10">10 mins</option>
@@ -20,11 +12,13 @@
     </form>
     <button v-if="isSettingVisible" @click="showSettings(false)">hide settings</button>
     <button v-if="!isSettingVisible" @click="showSettings(true)">show settings</button>
+    <button @click="startWL">start</button>
   </div>
 </template>
 
 <script>
   /* eslint-disable no-console */
+  import { initWakeLock } from '../utils/wakelock'
 
   export default {
     name: 'app',
@@ -34,22 +28,6 @@
       }
     },
     computed: {
-      bgHue: {
-        get: function () {
-          return this.$store.state.hue
-        },
-        set: function (value) {
-          this.$store.dispatch('saveHue', value)
-        }
-      },
-      bgLightness: {
-        get: function () {
-          return this.$store.state.lightness
-        },
-        set: function (value) {
-          this.$store.dispatch('saveLightness', value)
-        }
-      },
       wakeLockTime: {
         get: function () {
           return this.$store.state.wakeLockTime
@@ -60,6 +38,13 @@
       },
     },
     methods: {
+      setFullScreen () {
+        if (document.fullscreenElement || document.webkitFullscreenElement) {
+          document.exitFullscreen()
+        } else {
+          document.body.requestFullscreen()
+        }
+      },
       showSettings (toShow) {
         const settings = this.$refs.settings
 
@@ -71,6 +56,12 @@
         }
 
         this.isSettingVisible = toShow
+      },
+      startWL() {
+        initWakeLock().then(res => {
+          this.$store.commit('setWakeLockStatus', res.status)
+          this.setFullScreen()
+        })
       }
     }
   }

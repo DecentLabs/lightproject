@@ -12,7 +12,6 @@
 <script>
   /* eslint-disable no-console */
 
-  import { initWakeLock } from './utils/wakelock'
   import { mapState } from 'vuex'
 
   import settings from './components/settings'
@@ -73,15 +72,14 @@
 
         this.startY = posY
         this.startX = posX
-        this.$store.commit('setHue', hue)
-        this.$store.commit('setLightness', lightness)
+        this.$store.dispatch('saveHue', hue)
+        this.$store.dispatch('saveLightness', lightness)
       }
     },
     mounted () {
-      initWakeLock().then(res => {
-        this.$store.commit('setWakeLockStatus', res.status)
-      })
       this.$store.dispatch('loadSettings')
+      const timelimit = this.$store.state.wakeLockTime
+
     }
   }
 </script>

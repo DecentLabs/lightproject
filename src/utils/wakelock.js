@@ -1,31 +1,34 @@
 /* eslint-disable no-console */
 
-async function initWakeLock () {
+async function initWakeLock (request = null, timelimit) {
   let status = ''
+  let wakeLockObj = undefined
+
   if ('getWakeLock' in navigator) {
-    let wakeLockObj = undefined
 
-    try {
-      // Create a wake lock for the type we want.
-      wakeLockObj = await navigator.getWakeLock('screen')
+    navigator.getWakeLock('screen').then(res => {
+      wakeLockObj = res
+      let wakeLockRequest = null
+      
+
+      if (wakeLockRequest) {
+        wakeLockRequest.cancel();
+        wakeLockRequest = null;
+        return;
+      }
       console.log('getWakeLock success', wakeLockObj)
-      status = 'wakelock OK'
-    } catch (err) {
-      console.error('getWakeLock error', err)
+    }).catch((err) => {
       status = 'wakelock error'
-    }
-
-    return {
-      status,
-      wakeLock: wakeLockObj
-    }
+      console.log('Could not obtain wake lock', err);
+    });
   } else {
     console.log('getWakeLock not supported')
     status = 'wakelock not supported'
   }
 
   return {
-    status
+    status,
+    wakeLockObj
   }
 }
 
