@@ -86,20 +86,17 @@
             this.$store.commit('setWakeLock', wakeLockObj)
             this.$store.commit('setWakeLockRequest', wakeLockRequest)
             this.$store.commit('setWakeLockStatus', 'WakeLock OK')
-            console.log('getWakeLock success', wakeLockObj)
+            console.debug('getWakeLock success', wakeLockObj)
 
-            console.log(wakeLockRequest)
             if (wakeLockRequest) {
               this.cancelWL()
             }
           }).catch((err) => {
-            status = 'wakelock error'
             console.log('Could not obtain wake lock', err);
           });
         } else {
-          console.log('getWakeLock not supported')
+          console.debug('getWakeLock not supported')
           this.$store.commit('setWakeLockStatus', 'WakeLock not supported')
-
         }
       },
       cancelWL() {
