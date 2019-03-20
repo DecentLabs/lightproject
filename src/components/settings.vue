@@ -3,11 +3,17 @@
     <form>
       <div>
         <label for="wakelock">wakelock time limit</label>
-        <select id="wakelock" v-model="wakeLockDuration">
-          <option value="1">10 mins</option>
-          <option value="20">20 mins</option>
-          <option value="30">30 mins</option>
-        </select>
+        <!--<select id="wakelock" v-model="wakeLockDuration">-->
+          <!--<option value="19">10 mins</option>-->
+          <!--<option value="20">20 mins</option>-->
+          <!--<option value="30">30 mins</option>-->
+        <!--</select>-->
+        <v-slider v-model="wakeLockDuration"
+                  thumb-label="always"
+                  thumb-color="black"
+                  :thumb-size="22">
+
+        </v-slider>
       </div>
     </form>
     <button v-if="isSettingVisible" @click="showSettings(false)">hide settings</button>
