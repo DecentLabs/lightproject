@@ -4,8 +4,9 @@
        @touchstart="onStart" @touchmove="onMove"
   >
     <p>{{ wakeLockStatus }}</p>
-    <settings></settings>
-
+    <div>
+      <settings @start="startWL"></settings>
+    </div>
   </div>
 </template>
 
@@ -13,7 +14,6 @@
   /* eslint-disable no-console */
 
   import { mapState } from 'vuex'
-
   import settings from './components/settings'
 
   export default {
@@ -22,14 +22,17 @@
     data () {
       return {
         startX: 0,
-        startY: 0,
-        wakeLock: 30
+        startY: 0
       }
     },
     computed: {
       ...mapState([
-        'wakeLockTime',
-        'wakeLockStatus'
+        'wakeLock',
+        'wakeLockStatus',
+        'wakeLockRequest',
+        'wakeLockDuration',
+        'wakeLockTimeOut',
+        'startTime'
       ]),
       bgColor () {
         return this.$store.getters.bgColor
@@ -74,12 +77,52 @@
         this.startX = posX
         this.$store.dispatch('saveHue', hue)
         this.$store.dispatch('saveLightness', lightness)
+      },
+      initWL() {
+        if ('getWakeLock' in navigator) {
+          navigator.getWakeLock('screen').then(res => {
+            const wakeLockObj = res
+            let wakeLockRequest = wakeLockObj.createRequest();
+            this.$store.commit('setWakeLock', wakeLockObj)
+            this.$store.commit('setWakeLockRequest', wakeLockRequest)
+            this.$store.commit('setWakeLockStatus', 'WakeLock OK')
+            console.log('getWakeLock success', wakeLockObj)
+
+            console.log(wakeLockRequest)
+            if (wakeLockRequest) {
+              this.cancelWL()
+            }
+          }).catch((err) => {
+            status = 'wakelock error'
+            console.log('Could not obtain wake lock', err);
+          });
+        } else {
+          console.log('getWakeLock not supported')
+          this.$store.commit('setWakeLockStatus', 'WakeLock not supported')
+
+        }
+      },
+      cancelWL() {
+        const timeOutID = window.setTimeout(() => {
+          this.wakeLockRequest.cancel();
+          this.$store.commit('setWakeLockRequest', null)
+        }, this.wakeLockDuration * 60 * 1000)
+        this.$store.commit('setTimeOutID', timeOutID)
+      },
+      startWL() {
+        if (this.wakeLockRequest && this.wakeLockTimeOut) {
+          window.clearTimeout(this.wakeLockTimeOut)
+          this.$store.commit('setWakeLockRequest', this.wakeLock.createRequest())
+          if (this.$store.state.wakeLockRequest) {
+            this.cancelWL()
+          }
+        } else {
+          this.initWL()
+        }
       }
     },
     mounted () {
       this.$store.dispatch('loadSettings')
-      const timelimit = this.$store.state.wakeLockTime
-
     }
   }
 </script>

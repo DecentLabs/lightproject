@@ -3,8 +3,8 @@
     <form>
       <div>
         <label for="wakelock">wakelock time limit</label>
-        <select id="wakelock" v-model="wakeLockTime">
-          <option value="10">10 mins</option>
+        <select id="wakelock" v-model="wakeLockDuration">
+          <option value="1">10 mins</option>
           <option value="20">20 mins</option>
           <option value="30">30 mins</option>
         </select>
@@ -12,13 +12,12 @@
     </form>
     <button v-if="isSettingVisible" @click="showSettings(false)">hide settings</button>
     <button v-if="!isSettingVisible" @click="showSettings(true)">show settings</button>
-    <button @click="startWL">start</button>
+    <button @click="startLight">start</button>
   </div>
 </template>
 
 <script>
   /* eslint-disable no-console */
-  import { initWakeLock } from '../utils/wakelock'
 
   export default {
     name: 'app',
@@ -28,16 +27,20 @@
       }
     },
     computed: {
-      wakeLockTime: {
+      wakeLockDuration: {
         get: function () {
-          return this.$store.state.wakeLockTime
+          return this.$store.state.wakeLockDuration
         },
         set: function (value) {
-          this.$store.dispatch('saveWakeLockTime', value)
+          this.$store.dispatch('saveWakeLockDuration', value)
         }
       },
     },
     methods: {
+      startLight() {
+        this.$emit('start')
+        this.setFullScreen()
+      },
       setFullScreen () {
         if (document.fullscreenElement || document.webkitFullscreenElement) {
           document.exitFullscreen()
@@ -57,12 +60,6 @@
 
         this.isSettingVisible = toShow
       },
-      startWL() {
-        initWakeLock().then(res => {
-          this.$store.commit('setWakeLockStatus', res.status)
-          this.setFullScreen()
-        })
-      }
     }
   }
 </script>

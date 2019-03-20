@@ -12,8 +12,11 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
+    wakeLock: null,
     wakeLockStatus: '',
-    wakeLockTime: 30,
+    wakeLockDuration: 30,
+    wakeLockRequest: null,
+    wakeLockTimeOut: null,
     hue: 46,
     lightness: 70
   },
@@ -23,10 +26,16 @@ const store = new Vuex.Store({
     }
   },
   mutations: {
+    setWakeLock(state, obj) {
+      state.wakeLock = obj
+    },
+    setWakeLockRequest(state, req) {
+      state.wakeLockRequest = req
+    },
     setWakeLockStatus(state, status) {
       state.wakeLockStatus = status
     },
-    setWakeLockTime(state, time) {
+    setWakeLockDuration(state, time) {
       state.wakeLockTime = time
     },
     setHue(state, hue) {
@@ -34,7 +43,10 @@ const store = new Vuex.Store({
     },
     setLightness(state, lightness) {
       state.lightness = lightness
-    }
+    },
+    setWakeLockTimeOut(state, id) {
+      state.wakeLockTimeOut = id
+    },
   },
   actions: {
     saveHue({commit}, value) {
@@ -45,14 +57,15 @@ const store = new Vuex.Store({
       commit('setLightness', value)
       localStorage.setItem(STORAGE.LIGHTNESS, value)
     },
-    saveWakeLockTime({commit}, value) {
-      commit('setWakeLockTime', value)
+    saveWakeLockDuration({commit}, value) {
+      commit('setWakeLockDuration', value)
       localStorage.setItem(STORAGE.TIME, value)
     },
     loadSettings({commit}) {
       const hue = localStorage.getItem(STORAGE.HUE)
       const lightness = localStorage.getItem(STORAGE.LIGHTNESS)
       const time = localStorage.getItem(STORAGE.TIME)
+
       if(hue) {
         commit('setHue', hue)
       }
@@ -62,7 +75,7 @@ const store = new Vuex.Store({
       }
 
       if(time) {
-        commit('setWakeLockTime', time)
+        commit('setWakeLockDuration', time)
       }
     }
   }
