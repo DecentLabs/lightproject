@@ -77,49 +77,12 @@
         this.$store.dispatch('saveHue', hue)
         this.$store.dispatch('saveLightness', lightness)
       },
-      initWL () {
-        if ('getWakeLock' in navigator) {
-          navigator.getWakeLock('screen').then(res => {
-            const wakeLockObj = res
-            let wakeLockRequest = wakeLockObj.createRequest()
-            this.$store.commit('setWakeLock', wakeLockObj)
-            this.$store.commit('setWakeLockRequest', wakeLockRequest)
-            this.$store.commit('setWakeLockStatus', 'WakeLock OK')
-            console.debug('getWakeLock success', wakeLockObj)
-
-            if (wakeLockRequest) {
-              this.cancelWL()
-            }
-          }).catch((err) => {
-            console.log('Could not obtain wake lock', err)
-          })
-        } else {
-          console.debug('getWakeLock not supported')
-          this.$store.commit('setWakeLockStatus', 'WakeLock not supported')
-        }
-      },
-      cancelWL () {
-        const timeOutID = window.setTimeout(() => {
-          this.wakeLockRequest.cancel()
-          this.$store.commit('setWakeLockRequest', null)
-        }, this.wakeLockDuration * 60 * 1000)
-        this.$store.commit('setWakeLockTimeOut', timeOutID)
-      },
       startWL () {
-        if (this.wakeLockRequest && this.wakeLockTimeOut) {
-          window.clearTimeout(this.wakeLockTimeOut)
-          this.$store.commit('setWakeLockRequest', this.wakeLock.createRequest())
-          if (this.$store.state.wakeLockRequest) {
-            this.cancelWL()
-          }
-        } else {
-          this.initWL()
-        }
+        this.$store.dispatch('startWL')
       },
     },
     mounted () {
       this.$store.dispatch('loadSettings')
-      console.debug('afterload', this.hue)
     },
   }
 </script>

@@ -11,12 +11,16 @@
     </form>
     <v-btn v-if="isSettingVisible"
            @click="showSettings(false)"
-           depressed round large :dark="!isDark">hide settings</v-btn>
+           depressed round large :dark="!isDark">hide settings
+    </v-btn>
     <v-btn v-if="!isSettingVisible"
            @click="showSettings(true)"
-           depressed round large :dark="!isDark">show settings</v-btn>
-    <v-btn @click="startLight"
-           depressed fab large  :dark="!isDark">start</v-btn>
+           depressed round large :dark="!isDark">show settings
+    </v-btn>
+    <v-btn v-if="isSettingVisible"
+           @click="startLight"
+           depressed fab large :dark="!isDark">start
+    </v-btn>
   </v-container>
 </template>
 
@@ -41,11 +45,12 @@
       },
       isDark () {
         return parseInt(this.$store.state.lightness, 10) < 40
-      }
+      },
     },
     methods: {
       startLight () {
         this.$emit('start')
+        this.showSettings(false)
         this.setFullScreen()
       },
       setFullScreen () {

@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
+/* eslint-disable no-console */
+
 const STORAGE = {
   DURATION:'light-duration',
   HUE: 'light-hue',
@@ -36,7 +38,6 @@ const store = new Vuex.Store({
       state.wakeLockStatus = status
     },
     setWakeLockDuration(state, duration) {
-      console.debug('commit duration')
       state.wakeLockDuration = duration
     },
     setHue(state, hue) {
@@ -78,7 +79,47 @@ const store = new Vuex.Store({
       if(duration && !isNaN(duration)) {
         commit('setWakeLockDuration', duration)
       }
-    }
+    },
+    initWL ({commit, dispatch}) {
+      if ('getWakeLock' in navigator) {
+        navigator.getWakeLock('screen').then(res => {
+          const wakeLockObj = res
+          let wakeLockRequest = wakeLockObj.createRequest()
+          commit('setWakeLock', wakeLockObj)
+          commit('setWakeLockRequest', wakeLockRequest)
+          commit('setWakeLockStatus', 'WakeLock OK')
+          console.debug('getWakeLock success', wakeLockObj)
+
+          if (wakeLockRequest) {
+            dispatch('cancelWL')
+          }
+        }).catch((err) => {
+          console.log('Could not obtain wake lock', err)
+        })
+      } else {
+        console.debug('getWakeLock not supported')
+        commit('setWakeLockStatus', 'WakeLock not supported')
+      }
+    },
+    cancelWL ({state, commit}) {
+      const timeOutID = window.setTimeout(() => {
+        state.wakeLockRequest.cancel()
+        commit('setWakeLockRequest', null)
+        console.debug('wakelock cancelled')
+      }, state.wakeLockDuration * 60 * 1000)
+      commit('setWakeLockTimeOut', timeOutID)
+    },
+    startWL ({state, commit, dispatch}) {
+      if (state.wakeLockRequest && state.wakeLockTimeOut) {
+        window.clearTimeout(state.wakeLockTimeOut)
+        commit('setWakeLockRequest', state.wakeLock.createRequest())
+        if (state.wakeLockRequest) {
+          dispatch('cancelWL')
+        }
+      } else {
+        dispatch('initWL')
+      }
+    },
   }
 })
 
