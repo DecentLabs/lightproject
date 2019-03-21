@@ -2,7 +2,7 @@
   <v-app>
     <div id="app" ref="main"
          :style="{backgroundColor: bgColor}"
-         @touchstart="onStart" @touchmove="onMove">
+         @touchstart="onStart" @touchmove="onMove" @touchend="onTouch">
     </div>
     <p>{{ wakeLockStatus }}</p>
     <settings @start="startWL"></settings>
@@ -22,17 +22,14 @@
       return {
         startX: 0,
         startY: 0,
+        isFaded: false,
       }
     },
     computed: {
       ...mapState([
         'hue',
-        'wakeLock',
-        'wakeLockStatus',
-        'wakeLockRequest',
         'wakeLockDuration',
-        'wakeLockTimeOut',
-        'startTime',
+        'wakeLockStatus',
       ]),
       bgColor () {
         return this.$store.getters.bgColor
@@ -52,14 +49,12 @@
         let deltaY = Math.abs(posY - this.startY)
         let deltaX = Math.abs(posX - this.startX)
 
-        console.debug(hue)
-
         if (deltaY > 0 && deltaX < 10) {
           if (posY < this.startY) {
-            console.log('up')
+            console.debug('up')
             lightness += deltaY * 0.2
           } else {
-            console.log('down')
+            console.debug('down')
             lightness -= deltaY * 0.2
           }
         }
@@ -77,8 +72,25 @@
         this.$store.dispatch('saveHue', hue)
         this.$store.dispatch('saveLightness', lightness)
       },
+      onTouch () {
+        if (this.isFaded) {
+          this.shine()
+          this.startWL()
+        }
+      },
       startWL () {
         this.$store.dispatch('startWL')
+        this.fade()
+      },
+      fade () {
+        window.setTimeout(() => {
+          this.$refs.main.style.opacity = 0.7
+          this.isFaded = true
+        }, this.wakeLockDuration * 0.8 * 60 * 1000)
+      },
+      shine () {
+        this.$refs.main.style.opacity = 1
+        this.isFaded = false
       },
     },
     mounted () {
@@ -103,6 +115,7 @@
     right: 0;
     text-align: center;
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    transition: opacity 0.3s;
   }
 
   .dark {
