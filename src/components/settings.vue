@@ -49,7 +49,6 @@
     },
     methods: {
       startLight () {
-        this.$emit('start')
         this.showSettings(false)
         this.setFullScreen()
       },

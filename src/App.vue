@@ -5,7 +5,7 @@
          @touchstart="onStart" @touchmove="onMove" @touchend="onTouch">
     </div>
     <p>{{ wakeLockStatus }}</p>
-    <settings @start="startWL"></settings>
+    <settings></settings>
   </v-app>
 </template>
 
@@ -73,10 +73,8 @@
         this.$store.dispatch('saveLightness', lightness)
       },
       onTouch () {
-        if (this.isFaded) {
-          this.shine()
-          this.startWL()
-        }
+        this.shine()
+        this.startWL()
       },
       startWL () {
         this.$store.dispatch('startWL')
