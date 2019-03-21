@@ -1,13 +1,12 @@
 <template>
-  <div id="app" ref="main"
-       :class="theme" :style="{backgroundColor: bgColor}"
-       @touchstart="onStart" @touchmove="onMove"
-  >
-    <p>{{ wakeLockStatus }}</p>
-    <div>
-      <settings @start="startWL"></settings>
+  <v-app>
+    <div id="app" ref="main"
+         :style="{backgroundColor: bgColor}"
+         @touchstart="onStart" @touchmove="onMove">
     </div>
-  </div>
+    <p>{{ wakeLockStatus }}</p>
+    <settings @start="startWL"></settings>
+  </v-app>
 </template>
 
 <script>
@@ -22,24 +21,22 @@
     data () {
       return {
         startX: 0,
-        startY: 0
+        startY: 0,
       }
     },
     computed: {
       ...mapState([
+        'hue',
         'wakeLock',
         'wakeLockStatus',
         'wakeLockRequest',
         'wakeLockDuration',
         'wakeLockTimeOut',
-        'startTime'
+        'startTime',
       ]),
       bgColor () {
         return this.$store.getters.bgColor
       },
-      theme () {
-        return parseInt(this.$store.state.lightness, 10) < 40 ? 'dark' : 'light'
-      }
     },
     methods: {
       onStart (e) {
@@ -54,6 +51,8 @@
         let posX = e.changedTouches[0].clientX
         let deltaY = Math.abs(posY - this.startY)
         let deltaX = Math.abs(posX - this.startX)
+
+        console.debug(hue)
 
         if (deltaY > 0 && deltaX < 10) {
           if (posY < this.startY) {
@@ -78,11 +77,11 @@
         this.$store.dispatch('saveHue', hue)
         this.$store.dispatch('saveLightness', lightness)
       },
-      initWL() {
+      initWL () {
         if ('getWakeLock' in navigator) {
           navigator.getWakeLock('screen').then(res => {
             const wakeLockObj = res
-            let wakeLockRequest = wakeLockObj.createRequest();
+            let wakeLockRequest = wakeLockObj.createRequest()
             this.$store.commit('setWakeLock', wakeLockObj)
             this.$store.commit('setWakeLockRequest', wakeLockRequest)
             this.$store.commit('setWakeLockStatus', 'WakeLock OK')
@@ -92,21 +91,21 @@
               this.cancelWL()
             }
           }).catch((err) => {
-            console.log('Could not obtain wake lock', err);
-          });
+            console.log('Could not obtain wake lock', err)
+          })
         } else {
           console.debug('getWakeLock not supported')
           this.$store.commit('setWakeLockStatus', 'WakeLock not supported')
         }
       },
-      cancelWL() {
+      cancelWL () {
         const timeOutID = window.setTimeout(() => {
-          this.wakeLockRequest.cancel();
+          this.wakeLockRequest.cancel()
           this.$store.commit('setWakeLockRequest', null)
         }, this.wakeLockDuration * 60 * 1000)
-        this.$store.commit('setTimeOutID', timeOutID)
+        this.$store.commit('setWakeLockTimeOut', timeOutID)
       },
-      startWL() {
+      startWL () {
         if (this.wakeLockRequest && this.wakeLockTimeOut) {
           window.clearTimeout(this.wakeLockTimeOut)
           this.$store.commit('setWakeLockRequest', this.wakeLock.createRequest())
@@ -116,11 +115,12 @@
         } else {
           this.initWL()
         }
-      }
+      },
     },
     mounted () {
       this.$store.dispatch('loadSettings')
-    }
+      console.debug('afterload', this.hue)
+    },
   }
 </script>
 

@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 const STORAGE = {
-  TIME:'light-time',
+  DURATION:'light-duration',
   HUE: 'light-hue',
   LIGHTNESS: 'light-lightness'
 }
@@ -35,8 +35,9 @@ const store = new Vuex.Store({
     setWakeLockStatus(state, status) {
       state.wakeLockStatus = status
     },
-    setWakeLockDuration(state, time) {
-      state.wakeLockTime = time
+    setWakeLockDuration(state, duration) {
+      console.debug('commit duration')
+      state.wakeLockDuration = duration
     },
     setHue(state, hue) {
       state.hue = hue
@@ -59,23 +60,23 @@ const store = new Vuex.Store({
     },
     saveWakeLockDuration({commit}, value) {
       commit('setWakeLockDuration', value)
-      localStorage.setItem(STORAGE.TIME, value)
+      localStorage.setItem(STORAGE.DURATION, value)
     },
     loadSettings({commit}) {
       const hue = localStorage.getItem(STORAGE.HUE)
       const lightness = localStorage.getItem(STORAGE.LIGHTNESS)
-      const time = localStorage.getItem(STORAGE.TIME)
+      const duration = localStorage.getItem(STORAGE.DURATION)
 
-      if(hue) {
+      if(hue && !isNaN(hue)) {
         commit('setHue', hue)
       }
 
-      if(lightness) {
+      if(lightness && !isNaN(lightness)) {
         commit('setLightness', lightness)
       }
 
-      if(time) {
-        commit('setWakeLockDuration', time)
+      if(duration && !isNaN(duration)) {
+        commit('setWakeLockDuration', duration)
       }
     }
   }

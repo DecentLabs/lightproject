@@ -1,25 +1,23 @@
 <template>
-  <div class="form-wrapper" ref="settings">
+  <v-container class="form-wrapper" ref="settings">
     <form>
-      <div>
-        <label for="wakelock">wakelock time limit</label>
-        <!--<select id="wakelock" v-model="wakeLockDuration">-->
-          <!--<option value="19">10 mins</option>-->
-          <!--<option value="20">20 mins</option>-->
-          <!--<option value="30">30 mins</option>-->
-        <!--</select>-->
-        <v-slider v-model="wakeLockDuration"
-                  thumb-label="always"
-                  thumb-color="black"
-                  :thumb-size="22">
-
-        </v-slider>
-      </div>
+      <v-label :dark="isDark">wakelock time limit</v-label>
+      <v-slider v-model="wakeLockDuration"
+                thumb-label="always"
+                :thumb-size="22"
+                :dark="isDark"
+                max="30"
+      ></v-slider>
     </form>
-    <button v-if="isSettingVisible" @click="showSettings(false)">hide settings</button>
-    <button v-if="!isSettingVisible" @click="showSettings(true)">show settings</button>
-    <button @click="startLight">start</button>
-  </div>
+    <v-btn v-if="isSettingVisible"
+           @click="showSettings(false)"
+           depressed round large :dark="!isDark">hide settings</v-btn>
+    <v-btn v-if="!isSettingVisible"
+           @click="showSettings(true)"
+           depressed round large :dark="!isDark">show settings</v-btn>
+    <v-btn @click="startLight"
+           depressed fab large  :dark="!isDark">start</v-btn>
+  </v-container>
 </template>
 
 <script>
@@ -29,7 +27,7 @@
     name: 'app',
     data () {
       return {
-        isSettingVisible: true
+        isSettingVisible: true,
       }
     },
     computed: {
@@ -39,11 +37,14 @@
         },
         set: function (value) {
           this.$store.dispatch('saveWakeLockDuration', value)
-        }
+        },
       },
+      isDark () {
+        return parseInt(this.$store.state.lightness, 10) < 40
+      }
     },
     methods: {
-      startLight() {
+      startLight () {
         this.$emit('start')
         this.setFullScreen()
       },
@@ -66,7 +67,7 @@
 
         this.isSettingVisible = toShow
       },
-    }
+    },
   }
 </script>
 
@@ -79,6 +80,7 @@
     flex-direction: column;
     align-items: center;
     transition: transform .6s;
+    z-index: 100;
   }
 
   form {
@@ -101,5 +103,9 @@
 
   button {
     height: 20px;
+  }
+
+  .v-input__slot {
+    margin-bottom: 0;
   }
 </style>
