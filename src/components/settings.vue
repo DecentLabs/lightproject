@@ -17,7 +17,7 @@
            @click="showSettings(true)"
            depressed round large :dark="!isDark">show settings
     </v-btn>
-    <v-btn v-if="isSettingVisible"
+    <v-btn v-if="!isFullScreen"
            @click="startLight"
            depressed fab large :dark="!isDark">start
     </v-btn>
@@ -32,6 +32,7 @@
     data () {
       return {
         isSettingVisible: true,
+        isFullScreen: false
       }
     },
     computed: {
@@ -57,6 +58,7 @@
           document.exitFullscreen()
         } else {
           document.body.requestFullscreen()
+          this.isFullScreen = true
         }
       },
       showSettings (toShow) {
