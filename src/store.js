@@ -59,9 +59,10 @@ const store = new Vuex.Store({
       commit('setLightness', value)
       localStorage.setItem(STORAGE.LIGHTNESS, value)
     },
-    saveWakeLockDuration({commit}, value) {
+    saveWakeLockDuration({commit, dispatch}, value) {
       commit('setWakeLockDuration', value)
       localStorage.setItem(STORAGE.DURATION, value)
+      dispatch('startWL')
     },
     loadSettings({commit}) {
       const hue = localStorage.getItem(STORAGE.HUE)
