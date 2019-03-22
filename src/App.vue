@@ -28,6 +28,7 @@
     computed: {
       ...mapState([
         'hue',
+        'lightness',
         'wakeLockDuration',
         'wakeLockStatus',
       ]),
@@ -82,7 +83,7 @@
       },
       fade () {
         window.setTimeout(() => {
-          this.$refs.main.style.opacity = 0.7
+          this.$store.commit('setLightness', this.lightness * 0.8)
           this.isFaded = true
         }, this.wakeLockDuration * 0.8 * 60 * 1000)
       },
