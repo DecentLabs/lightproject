@@ -7,7 +7,6 @@ before_install:
 install:
   - yarn
 script:
-  - yarn run sw-cache
   - yarn run build
 branches:
   only:
