@@ -10,7 +10,7 @@ script:
   - yarn run sw-precache
   - yarn run build
   - git add .
-  - git push
+  - git push origin HEAD:master
 branches:
   only:
   - master
