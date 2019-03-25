@@ -9,9 +9,7 @@ Vue.use(Vuetify)
 
 Vue.config.productionTip = false
 
-const prod = process.env.NODE_ENV === 'production'
-const shouldSW = 'serviceWorker' in navigator && prod
-if (shouldSW) {
+if ( 'serviceWorker' in navigator) {
   navigator.serviceWorker.register('./service-worker.js').then(() => {
     console.log("Service Worker Registered!")
   })
