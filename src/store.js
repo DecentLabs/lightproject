@@ -51,12 +51,14 @@ const store = new Vuex.Store({
     },
   },
   actions: {
-    saveHue({commit}, value) {
+    saveHue({commit, state}, value) {
       commit('setHue', value)
+      console.debug('save hue', value, state.hue)
       localStorage.setItem(STORAGE.HUE, value)
     },
-    saveLightness({commit}, value) {
+    saveLightness({commit, state}, value) {
       commit('setLightness', value)
+      console.debug('save lightness', value, state.lightness)
       localStorage.setItem(STORAGE.LIGHTNESS, value)
     },
     saveWakeLockDuration({commit, dispatch}, value) {
