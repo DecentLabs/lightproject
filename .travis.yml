@@ -9,11 +9,13 @@ install:
 script:
   - yarn run sw-precache
   - yarn run build
+  - travis setup releases --pro
+  - git add .
+  - git commit -m 'new build'
 deploy:
   provider: pages
   skip-cleanup: true
   github-token: $GH_TOKEN
   keep-history: true
-  verbose: true
   on:
     branch: master
