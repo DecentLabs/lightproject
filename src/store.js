@@ -51,14 +51,12 @@ const store = new Vuex.Store({
     },
   },
   actions: {
-    saveHue({commit, state}, value) {
+    saveHue({commit}, value) {
       commit('setHue', value)
-      console.debug('save hue', value, state.hue)
       localStorage.setItem(STORAGE.HUE, value)
     },
-    saveLightness({commit, state}, value) {
+    saveLightness({commit}, value) {
       commit('setLightness', value)
-      console.debug('save lightness', value, state.lightness)
       localStorage.setItem(STORAGE.LIGHTNESS, value)
     },
     saveWakeLockDuration({commit, dispatch}, value) {
@@ -72,15 +70,15 @@ const store = new Vuex.Store({
       const duration = localStorage.getItem(STORAGE.DURATION)
 
       if(hue && !isNaN(hue)) {
-        commit('setHue', hue)
+        commit('setHue', parseInt(hue), 10)
       }
 
       if(lightness && !isNaN(lightness)) {
-        commit('setLightness', lightness)
+        commit('setLightness', parseInt(lightness, 10))
       }
 
       if(duration && !isNaN(duration)) {
-        commit('setWakeLockDuration', duration)
+        commit('setWakeLockDuration', parseInt(duration, 10))
       }
     },
     initWL ({commit, dispatch}) {

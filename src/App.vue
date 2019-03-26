@@ -85,7 +85,6 @@
         window.setTimeout(() => {
           this.$store.commit('setLightness', this.lightness * 0.8)
           this.isFaded = true
-          console.log('fade')
         }, this.wakeLockDuration * 0.8 * 60 * 1000)
       },
       shine () {
