@@ -102,8 +102,8 @@
 
 <style>
 
-  body {
-    width: 100%;
+  body,
+  html {
     overflow: hidden;
   }
 
@@ -116,6 +116,7 @@
     text-align: center;
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
     transition: opacity 0.3s;
+    overflow: hidden;
   }
 
   .dark {
