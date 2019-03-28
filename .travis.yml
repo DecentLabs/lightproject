@@ -9,8 +9,6 @@ install:
 script:
   - yarn run sw-precache
   - yarn run build
-  - git add .
-  - git commit -m 'new build'
 deploy:
   provider: pages
   skip-cleanup: true
