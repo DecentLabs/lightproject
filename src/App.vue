@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <div id="app" ref="main"
-         :style="{backgroundColor: bgColor}"
+         :style="{backgroundColor: bgColor, height}"
          @touchstart="onStart" @touchmove="onMove" @touchend="onTouch">
     </div>
     <p>{{ wakeLockStatus }}</p>
@@ -23,6 +23,7 @@
         startX: 0,
         startY: 0,
         isFaded: false,
+        height: '100vh'
       }
     },
     computed: {
@@ -94,6 +95,7 @@
     },
     mounted () {
       this.$store.dispatch('loadSettings')
+      this.mounted = window.innerHeight
     },
   }
 </script>
@@ -102,7 +104,6 @@
 
   body {
     width: 100%;
-    height: 100vh;
     overflow: hidden;
   }
 
