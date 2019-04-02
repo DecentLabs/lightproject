@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "precache-manifest.4d0c570878334b150eceb8058c015b6d.js"
+  "precache-manifest.3092050a9f11d274fdd88a0a9af4e788.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "lightproject"});
