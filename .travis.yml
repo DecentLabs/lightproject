@@ -9,7 +9,6 @@ install:
 script:
   - yarn run sw-precache
   - yarn run build
-  - git status
 deploy:
   provider: pages
   local_dir: ./docs
