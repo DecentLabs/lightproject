@@ -17,10 +17,6 @@
            @click="showSettings(true)"
            depressed round large :dark="!isDark">show settings
     </v-btn>
-    <v-btn v-if="!isFullScreen"
-           @click="startLight"
-           depressed fab large :dark="!isDark">start
-    </v-btn>
   </v-container>
 </template>
 
@@ -49,10 +45,6 @@
       },
     },
     methods: {
-      startLight () {
-        this.showSettings(false)
-        this.setFullScreen()
-      },
       setFullScreen () {
         if (document.fullscreenElement || document.webkitFullscreenElement) {
           document.exitFullscreen()

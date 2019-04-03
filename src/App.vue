@@ -6,6 +6,7 @@
     </div>
     <p>{{ wakeLockStatus }}</p>
     <settings></settings>
+    <my-version></my-version>
   </v-app>
 </template>
 
@@ -14,10 +15,11 @@
 
   import { mapState } from 'vuex'
   import settings from './components/settings'
+  import myVersion from './components/version.vue'
 
   export default {
     name: 'app',
-    components: {settings},
+    components: {settings, myVersion},
     data () {
       return {
         startX: 0,
@@ -95,7 +97,8 @@
     },
     mounted () {
       this.$store.dispatch('loadSettings')
-      this.mounted = window.innerHeight
+      this.height = window.innerHeight
+      this.startWL()
     },
   }
 </script>
@@ -125,5 +128,11 @@
 
   .light {
     color: #020204
+  }
+
+  .version {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
   }
 </style>
