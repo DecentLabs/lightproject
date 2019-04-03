@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "build": "vue-cli-service build --target wc --name my-version 'src/components/version.vue'",
     "lint": "vue-cli-service lint",
     "sw-cache": "sw-precache --config sw-config.js"
   },
