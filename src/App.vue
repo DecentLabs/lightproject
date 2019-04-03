@@ -6,7 +6,6 @@
     </div>
     <p>{{ wakeLockStatus }}</p>
     <settings></settings>
-    <my-version></my-version>
   </v-app>
 </template>
 
@@ -15,11 +14,10 @@
 
   import { mapState } from 'vuex'
   import settings from './components/settings'
-  import myVersion from './components/version.vue'
 
   export default {
     name: 'app',
-    components: {settings, myVersion},
+    components: {settings},
     data () {
       return {
         startX: 0,
