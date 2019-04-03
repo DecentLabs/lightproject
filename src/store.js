@@ -9,7 +9,6 @@ const STORAGE = {
   LIGHTNESS: 'light-lightness'
 }
 
-
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
