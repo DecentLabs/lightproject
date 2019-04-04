@@ -1,5 +1,5 @@
 <template>
-  <v-container class="form-wrapper" ref="settings">
+  <v-container class="form-wrapper" :class="!isSettingVisible && 'hidden'" ref="settings">
     <form>
       <v-label :dark="isDark">wakelock time limit</v-label>
       <v-slider v-model="wakeLockDuration"
@@ -10,11 +10,11 @@
       ></v-slider>
     </form>
     <v-btn v-if="isSettingVisible"
-           @click="showSettings(false)"
+           @click="showSettings"
            depressed round large :dark="!isDark">hide settings
     </v-btn>
     <v-btn v-if="!isSettingVisible"
-           @click="showSettings(true)"
+           @click="showSettings"
            depressed round large :dark="!isDark">show settings
     </v-btn>
   </v-container>
@@ -27,7 +27,7 @@
     name: 'app',
     data () {
       return {
-        isSettingVisible: true,
+        isSettingVisible: false,
         isFullScreen: false
       }
     },
@@ -53,19 +53,10 @@
           this.isFullScreen = true
         }
       },
-      showSettings (toShow) {
-        const settings = this.$refs.settings
-
-        if (toShow) {
-          settings.style.transform = 'translateY(0)'
-        } else {
-          const form = settings.querySelector('form')
-          settings.style.transform = `translateY(${form.clientHeight * -1 + 20}px)`
-        }
-
-        this.isSettingVisible = toShow
+      showSettings () {
+        this.isSettingVisible = !this.isSettingVisible
       },
-    },
+    }
   }
 </script>
 
@@ -79,6 +70,10 @@
     align-items: center;
     transition: transform .6s;
     z-index: 100;
+  }
+
+  .form-wrapper.hidden {
+    transform: translateY(calc(-100% + 80px));
   }
 
   form {
