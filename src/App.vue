@@ -81,12 +81,18 @@
       startWL () {
         this.$store.dispatch('startWL')
         this.fade()
+        this.alarm()
       },
       fade () {
         window.setTimeout(() => {
           this.$store.commit('setLightness', this.lightness * 0.8)
           this.isFaded = true
         }, this.wakeLockDuration * 0.8 * 60 * 1000)
+      },
+      alarm () {
+        window.setTimeout(() => {
+            window.navigator.vibrate(200)
+        }, this.wakeLockDuration * 0.5)
       },
       shine () {
         this.$refs.main.style.opacity = 1
